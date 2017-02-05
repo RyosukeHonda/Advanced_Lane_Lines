@@ -13,17 +13,17 @@ The goals / steps of this project are the following:
 
 [//]: # (Image References)
 
-[image1]: ./pics/undistortion.png "Undistorted"
-[image2]: ./pics/undistort_image.png "Road Transformed"
-[image3]: ./pics/white_line_detection.png "Binary Example of White Line"
-[image4]: ./pics/yellow_line_detection.png "Binary Example of Yellow Line"
-[image5]: ./pics/sobel_thresh.png "Sobel X"
-[image6]: ./pics/color_edge.png "Color Edge"
-[image7]: ./pics/gaussianblur.png "Gaussian Blur"
-[image8]: ./pics/warped.png "Warped image"
-[image9]: ./pics/left_right_lane.png "Left Right Lane"
-[image10]: ./pics/polyfit.png "2nd order polynomial fit"
-[image11]: ./pics/plot_back.png "Plot Back"
+[image1]: ./pics_for_README/undistortion.png "Undistorted"
+[image2]: ./pics_for_README/undistort_image.png "Road Transformed"
+[image3]: ./pics_for_README/white_line_detection.png "Binary Example of White Line"
+[image4]: ./pics_for_README/yellow_line_detection.png "Binary Example of Yellow Line"
+[image5]: ./pics_for_README/sobel_thresh.png "Sobel X"
+[image6]: ./pics_for_README/color_edge.png "Color Edge"
+[image7]: ./pics_for_README/gaussianblur.png "Gaussian Blur"
+[image8]: ./pics_for_README/warped.png "Warped image"
+[image9]: ./pics_for_README/left_right_lane.png "Left Right Lane"
+[image10]: ./pics_for_README/polyfit.png "2nd order polynomial fit"
+[image11]: ./pics_for_README/plot_back.png "Plot Back"
 
 
 
