@@ -197,7 +197,7 @@ I've found lane lines so far. The lane lines are in the transformed image so I h
 
 The output of the pipeline is below.
 
-[![Result](pics/plot_back.png)](https://youtu.be/lTSelE62_H4)
+[![Result](pics_for_README/plot_back.png)](https://youtu.be/lTSelE62_H4)
 
 ---
 
