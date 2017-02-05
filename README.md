@@ -14,7 +14,7 @@ The goals / steps of this project are the following:
 [//]: # (Image References)
 
 [image1]: ./pics/undistortion.png "Undistorted"
-[image2]: ./pics/undistort_image.jpg "Road Transformed"
+[image2]: ./pics/undistort_image.png "Road Transformed"
 [image3]: ./pics/white_line_detection.png "Binary Example of White Line"
 [image4]: ./pics/yellow_line_detection.png "Binary Example of Yellow Line"
 [image5]: ./pics/sobel_thresh.png "Sobel X"
@@ -30,14 +30,12 @@ The goals / steps of this project are the following:
 ###Here I will consider the rubric points individually and describe how I addressed each point in my implementation.
 
 ---
-###Writeup / README
 
-####1. Provide a Writeup / README that includes all the rubric points and how you addressed each one.  You can submit your writeup as markdown or pdf.  [Here](https://github.com/udacity/CarND-Advanced-Lane-Lines/blob/master/writeup_template.md) is a template writeup for this project you can use as a guide and a starting point.
 
-You're reading it!
+
 ###Camera Calibration
 
-####1. Briefly state how you computed the camera matrix and distortion coefficients. Provide an example of a distortion corrected calibration image.
+####1. Camera matrix and distortion coefficients.
 
 Image distortion occurs when a camera looks at 3D objects in the real world and transforms them into 2D image. This transformation isn't perfect(different size or shape). Therefore we have to undistort the image. By undistorting image, we can get correct and more useful information from an image.
 
@@ -84,13 +82,26 @@ sobel = cv2.Sobel(gray,cv2.CV_64F,1,0,ksize=3)
 
 The binary image of sobel x thresholding is below.
 (I apply the sobel x to the original image,not transformed ones,so that we can see the entire image of sobel x effect.)
+
+
+
 ![Sobel X][image5]
 
 
+
+
+
 Then I put it together.
+
+
+
+
 ![Color Edge][image6]
 
 Finally I apply Gaussian Blur so that the detected lines area are enlarged.
+
+
+
 ![Gaussian Blur][image7]
 
 
@@ -129,15 +140,19 @@ Until here, I've got binary image of lanes.Therefore, from here, I'll discuss ho
 
 First I divied the image into 10 frames from top to bottom.
 Then, I take the moving average to the binary image of each frame. "1" means the pixel is white and "0" means the pixel is black. After calculating moving average, I set threthold to 0.005 empirically to decide where lane pixels are in the pics. I set 0 in the binary picture where the moving average is below threshold. Then I got the left and right lanes as follows.
+
+
 ![Left and Right Lanes][image9]
 
 After getting left and right lanes, I set threshold again to each lane to find the better position. As for the left lane, I set threthold as 0.08 and for the right lane, 0.008. Thus I got the lane pixels. To prevent detecting anomally pixels(anomally location), I chose 5 to 90 percentile of the pixels from the left and 5 to 95 percentiles of the pixels from the right. Finally, I got the x and y lane pixels from the image, So from these points, I fit second order of polynomial fit.
+
+
 ![2nd order of polynomial fit][image10]
 
 ####5. Radius of curvature and vehicle position
 
 
-Theradius of the curvature is computed as following. The picture is in pixel value, so we have to transform it in meter scale.
+The radius of the curvature is computed as following. The picture is in pixel value, so we have to transform it in meter scale.
 
 ```
 ym_per_pix = 30/720 # meters per pixel in y dimension
@@ -145,7 +160,7 @@ xm_per_pix = 3.7/700 # meteres per pixel in x dimension
 ```
 
 Here, all_x and all_y is the pixels where lane line exists.
-I fitted polynomial fit on the meter scale and then I calculated the curvature as follows as in lecture.
+I fitted polynomial fit on the meter scale and then I calculated the curvature as in lecture as follows .
 ```
 left_fit_cr = np.polyfit(all_x*ym_per_pix, all_y*xm_per_pix, 2)
 y_eval = np.max(all_x)
@@ -168,15 +183,13 @@ dist_offset =100* (veh_pos - middle)*xm_per_pix # Positive means the car is  on 
 I've found lane lines so far. The lane lines are in the transformed image so I have to retransform it into the original image. I implemented this step in the EDA.ipynb
 
 
-
-
 ![Plot Back][image11]
 
 ---
 
 ###Pipeline (video)
 
-####1. Provide a link to your final video output.  Your pipeline should perform reasonably well on the entire project video (wobbly lines are ok but no catastrophic failures that would cause the car to drive off the road!).
+The output of the pipeline is below.
 
 Here's a [link to my video result](./project_video.mp4)
 
@@ -184,6 +197,8 @@ Here's a [link to my video result](./project_video.mp4)
 
 ###Discussion
 
-####1. Briefly discuss any problems / issues you faced in your implementation of this project.  Where will your pipeline likely fail?  What could you do to make it more robust?
+In this project, I searched lane lanes from the image.
+The procesure is as follows.
+First, I calculated camera matrics and distortion coefficients to undistort image. Then I use several techniques to find lane lines. Firstly, I transform the color space from RGB to HSV to find white and yellow lines. Then I used sobel operation to detect edges. Finally I put it together and then used gaussian blur to find the lane lines easily.
 
-Here I'll talk about the approach I took, what techniques I used, what worked and why, where the pipeline might fail and how I might improve it if I were going to pursue this project further.
+The procedure above may fail to detect lines when there are lines apart from lanes such as crosswalk. To prevent miss detection, I should keep the information of the lane lines so that I can keep track of the lanes.
