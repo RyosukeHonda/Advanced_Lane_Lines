@@ -134,9 +134,34 @@ Then, I take the moving average to the binary image of each frame. "1" means the
 After getting left and right lanes, I set threshold again to each lane to find the better position. As for the left lane, I set threthold as 0.08 and for the right lane, 0.008. Thus I got the lane pixels. To prevent detecting anomally pixels(anomally location), I chose 5 to 90 percentile of the pixels from the left and 5 to 95 percentiles of the pixels from the right. Finally, I got the x and y lane pixels from the image, So from these points, I fit second order of polynomial fit.
 ![2nd order of polynomial fit][image10]
 
-####5. Describe how (and identify where in your code) you calculated the radius of curvature of the lane and the position of the vehicle with respect to center.
+####5. Radius of curvature and vehicle position
 
-I did this in lines # through # in my code in `my_other_file.py`
+
+Theradius of the curvature is computed as following. The picture is in pixel value, so we have to transform it in meter scale.
+
+```
+ym_per_pix = 30/720 # meters per pixel in y dimension
+xm_per_pix = 3.7/700 # meteres per pixel in x dimension
+```
+
+Here, all_x and all_y is the pixels where lane line exists.
+I fitted polynomial fit on the meter scale and then I calculated the curvature as follows as in lecture.
+```
+left_fit_cr = np.polyfit(all_x*ym_per_pix, all_y*xm_per_pix, 2)
+y_eval = np.max(all_x)
+left_curverad = ((1 + (2*left_fit_cr[0]*y_eval + left_fit_cr[1])**2)**1.5) \
+/np.absolute(2*left_fit_cr[0])
+```
+
+I also calculated the vehicle position. I assume that the camera is on the center of the car. By calculating the average of left lane and right lane position, we can get the position of the car.
+
+```
+middle = (left_fitx[-1] + right_fitx[-1])//2
+veh_pos = img_size[0]//2
+dist_offset =100* (veh_pos - middle)*xm_per_pix # Positive means the car is  on  the right side , Negative means on left
+
+```
+
 
 ####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
