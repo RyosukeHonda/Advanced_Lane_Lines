@@ -131,9 +131,9 @@ This resulted in the following source and destination points:
 
 | Source        | Destination   |
 |:-------------:|:-------------:|
-| 585, 455      | 300, 100      |
-| 705, 455      | 1000, 100     |
-| 1250, 720     | 1000, 720     |
+| 585, 455      | 300, 0        |
+| 705, 455      | 1000, 0       |
+| 1270, 720     | 1000, 720     |
 | 190, 720      | 300, 720      |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
@@ -150,7 +150,7 @@ Then, I take the moving average to the binary image of each frame. "1" means the
 
 ![Left and Right Lanes][image9]
 
-After getting left and right lanes, I set threshold again to each lane to find the better position. As for the left lane, I set threthold as 0.08 and for the right lane, 0.008. Thus I got the lane pixels. To prevent detecting anomally pixels(anomally location), I chose 5 to 90 percentile of the pixels from the left and 5 to 95 percentiles of the pixels from the right. Finally, I got the x and y lane pixels from the image, So from these points, I fit second order of polynomial fit.(Section 13 of EDA.ipynb)
+After getting left and right lanes, I set threshold again to each lane to find the better position. As for the left lane, I set threthold as 0.0045 and for the right lane, 0.029. Thus I got the lane pixels. To prevent detecting anomally pixels(anomally location), I chose 5 to 90 percentile of the pixels from the left and 3 to 100 percentiles of the pixels from the right. Finally, I got the x and y lane pixels from the image, So from these points, I fit second order of polynomial fit.(Section 13 of EDA.ipynb)
 
 
 ![2nd order of polynomial fit][image10]
@@ -197,7 +197,7 @@ I've found lane lines so far. The lane lines are in the transformed image so I h
 
 The output of the pipeline is below.
 
-[![Result](pics_for_README/plot_back.png)](https://youtu.be/lTSelE62_H4)
+[![Result](pics_for_README/plot_back.png)](https://www.youtube.com/watch?v=tmVQ4cbWAr4&feature=youtu.be)
 
 ---
 
