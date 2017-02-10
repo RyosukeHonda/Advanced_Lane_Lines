@@ -65,11 +65,11 @@ The threshold of the HSV is as follows.
 
 | Color Space | White Line    | Yellow Line   |
 |:---------:  |:-------------:|:-------------:|
-| H low       | 0             | 0             |
+| H low       | 4             | 18            |
 | H high      | 255           | 80            |
-| S low       | 0             | 65            |
+| S low       | 0             | 80            |
 | S high      | 32            | 255           |
-| V low       | 180           | 80            |
+| V low       | 207           | 0             |
 | V high      | 255           | 255           |
 
 The binary image of the white and yellow line are below.
@@ -78,11 +78,12 @@ The binary image of the white and yellow line are below.
 
 The procedure in this process is in the section 7 ~ 9 of EDA.ipynb
 
-I also used Edge detection by Sobel x operator
+I also used Edge detection by Sobel x operator.
+I utilized HLS color space (S spece) and used kernel size of 13 and min threshold to 90 ans max threshold to 225
 The procedure in this process is in the section 1 of EDA.ipynb
 
 ```
-sobel = cv2.Sobel(gray,cv2.CV_64F,1,0,ksize=3)
+sobel = cv2.Sobel(img,cv2.CV_64F,1,0,ksize=13 ,thresh_min=90, thresh_max=225)
 ```
 
 The binary image of sobel x thresholding is below.
@@ -118,7 +119,7 @@ The code for my perspective transform includes a function called `warp()`, which
  src = np.float32(
     [[585. /1280.*img_size[0], 455./720.*img_size[1]],
     [705. /1280.*img_size[0], 455./720.*img_size[1]],
-    [1250./1280.*img_size[0], 720./720.*img_size[1]],
+    [1120./1280.*img_size[0], 720./720.*img_size[1]],
     [190. /1280.*img_size[0], 720./720.*img_size[1]]])
 
 dst = np.float32(
@@ -133,7 +134,7 @@ This resulted in the following source and destination points:
 |:-------------:|:-------------:|
 | 585, 455      | 300, 0        |
 | 705, 455      | 1000, 0       |
-| 1270, 720     | 1000, 720     |
+| 1120, 720     | 1000, 720     |
 | 190, 720      | 300, 720      |
 
 I verified that my perspective transform was working as expected by drawing the `src` and `dst` points onto a test image and its warped counterpart to verify that the lines appear parallel in the warped image.
@@ -144,13 +145,12 @@ I verified that my perspective transform was working as expected by drawing the 
 
 Until here, I've got binary image of lanes.Therefore, from here, I'll discuss how I identified lane line pixels and fit their positions with a polynomial.
 
-First I divied the image into 10 frames from top to bottom.
-Then, I take the moving average to the binary image of each frame. "1" means the pixel is white and "0" means the pixel is black. After calculating moving average, I set threthold to 0.005 empirically to decide where lane pixels are in the pics.(Section 11 of EDA.ipnb) I set 0 in the binary picture where the moving average is below threshold. Then I got the left and right lanes as follows.(Section 12 of EDA.ipynb)
-
+First I divied the image into 11 frames from top to bottom.
+Then, I take the moving average to the binary image of each frame. "1" means the pixel is white and "0" means the pixel is black. After calculating moving average, I find the peaks of the histogram by using find_peaks_cwt. if the peaks are more than 2, I set the small number of them to the Left lane pixel and large number of them to the Right lane pixel. If only one peak is found, I have to decide that one peak exists in left or right lane. If no peaks are found, I used the previous lane pixel as the lane pixel. If the difference between the current peak location and previous peak location is more than 80 picels, I set the current peak as the previous peak(no update). Finally, I set window size as 40. (Section 12 of EDA.ipnb)
 
 ![Left and Right Lanes][image9]
 
-After getting left and right lanes, I set threshold again to each lane to find the better position. As for the left lane, I set threthold as 0.0045 and for the right lane, 0.029. Thus I got the lane pixels. To prevent detecting anomally pixels(anomally location), I chose 5 to 90 percentile of the pixels from the left and 3 to 100 percentiles of the pixels from the right. Finally, I got the x and y lane pixels from the image, So from these points, I fit second order of polynomial fit.(Section 13 of EDA.ipynb)
+After getting left and right lanes, I set threshold again to each lane to find the better position. As for the left lane, I set threthold as 0.3 and for the right lane, 0.3. Thus I got the lane pixels. To prevent detecting anomally pixels(anomally location), I chose 5 to 90 percentile of the pixels from the left and 1 to 95 percentiles of the pixels from the right. Finally, I got the x and y lane pixels from the image, So from these points, I fit second order of polynomial fit.(Section 13 of EDA.ipynb)
 
 
 ![2nd order of polynomial fit][image10]
@@ -208,3 +208,6 @@ The procesure is as follows.
 First, I calculated camera matrics and distortion coefficients to undistort image. Then I use several techniques to find lane lines. Firstly, I transform the color space from RGB to HSV to find white and yellow lines. Then I used sobel operation to detect edges. Finally I put it together and then used gaussian blur to find the lane lines easily.
 
 The procedure above may fail to detect lines when there are lines apart from lanes such as crosswalk. To prevent miss detection, I should keep the information of the lane lines so that I can keep track of the lanes.
+
+#### Reference
+https://medium.com/@vivek.yadav/robust-lane-finding-using-advanced-computer-vision-techniques-mid-project-update-540387e95ed3#.pusofywkb
