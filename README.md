@@ -31,9 +31,9 @@ The goals / steps of this project are the following:
 
 
 
-###Camera Calibration
+### Camera Calibration
 
-####1. Camera matrix and distortion coefficients.
+#### 1. Camera matrix and distortion coefficients.
 
 Image distortion occurs when a camera looks at 3D objects in the real world and transforms them into 2D image. This transformation isn't perfect(different size or shape). Therefore we have to undistort the image. By undistorting image, we can get correct and more useful information from an image.
 
@@ -49,13 +49,13 @@ The code for this step is contained in the second code cell(undistort chess boar
 
 ![Image undistortion][image1]
 
-###Pipeline (single images)
+### Pipeline (single images)
 
-####1. Distortion-corrected image.
+#### 1. Distortion-corrected image.
 I applied the camera matrics and distortion coefficient,which are calculated above, to the test images and the result looks like this(Left:Original image Right:Undistorted image):
 ![alt text][image2]
 
-####2. Color transforms, Gradients to create a thresholded binary image.
+#### 2. Color transforms, Gradients to create a thresholded binary image.
 
 I used a combination of color and gradient thresholds to generate a binary image
 
@@ -111,7 +111,7 @@ Finally I apply Gaussian Blur so that the detected lines area are enlarged.
 ![Gaussian Blur][image7]
 
 
-####3. Perspective transform
+#### 3. Perspective transform
 
 The code for my perspective transform includes a function called `warp()`, which appears in the section 6 of EDA.ipynb.  The `warp()` function takes as inputs an image (`img`) and returns the transformed image,transformation matrics and inverse transformation matrics. I chose the hardcode the source and destination points in the following manner:
 
@@ -141,7 +141,7 @@ I verified that my perspective transform was working as expected by drawing the 
 
 ![Warped image][image8]
 
-####4. Lane-line pixels and fit their positions with a polynomial
+#### 4. Lane-line pixels and fit their positions with a polynomial
 
 Until here, I've got binary image of lanes.Therefore, from here, I'll discuss how I identified lane line pixels and fit their positions with a polynomial.
 
@@ -155,7 +155,7 @@ After getting left and right lanes, I set threshold again to each lane to find t
 
 ![2nd order of polynomial fit][image10]
 
-####5. Radius of curvature and vehicle position
+#### 5. Radius of curvature and vehicle position
 
 
 The radius of the curvature is computed as following. The picture is in pixel value, so we have to transform it in meter scale.
@@ -184,7 +184,7 @@ dist_offset =100* (veh_pos - middle)*xm_per_pix # Positive means the car is  on 
 ```
 
 
-####6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
+#### 6. Provide an example image of your result plotted back down onto the road such that the lane area is identified clearly.
 
 I've found lane lines so far. The lane lines are in the transformed image so I have to retransform it into the original image. I implemented this step in the section 14 in EDA.ipynb
 
@@ -193,7 +193,7 @@ I've found lane lines so far. The lane lines are in the transformed image so I h
 
 ---
 
-###Pipeline (video)
+### Pipeline (video)
 
 The output of the pipeline is below.
 
@@ -201,7 +201,7 @@ The output of the pipeline is below.
 
 ---
 
-###Discussion
+### Discussion
 
 In this project, I searched lane lanes from the image.
 The procesure is as follows.
